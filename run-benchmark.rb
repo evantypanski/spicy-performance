@@ -26,5 +26,5 @@ Dir.chdir("build") do
   puts "Running benchmarks!"
   puts "\n"
 
-  system("../bench")
+  system("./bench")
 end

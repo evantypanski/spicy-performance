@@ -1,0 +1,67 @@
+module Benchmark;
+
+public type BytesLength = unit {
+    length: uint64;
+    data: bytes &size=self.length;
+    end_: b"BB";
+};
+
+public type BytesUntil = unit {
+    length: uint64;
+    data: bytes &until=b"B";
+    end_: b"B";
+};
+
+public type While = unit {
+    length: uint64;
+    data: uint8[] &while=$$=='A';
+    end_: b"B";
+};
+
+public type Regex = unit {
+    length: uint64;
+    data: /A*/;
+    end_: b"BB";
+};
+
+public type WithUnit = unit {
+    length: uint64;
+    inner: Inner[] &size=self.length;
+    end_: b"BB";
+};
+
+type Inner = unit {
+    b: uint8;
+};
+
+public type WithUnitSwitch = unit {
+    length: uint64;
+    inner: InnerSwitch[] &size=self.length;
+    end_: b"BB";
+};
+
+type InnerSwitch = unit {
+    switch (True) {
+        True -> b: uint8;
+    };
+};
+
+public type Sync = unit {
+    length: uint64;
+    not_present: b"nope";
+    end_: b"BB" &synchronize;
+
+    on %synced {
+        confirm;
+    }
+};
+
+public type SyncRegex = unit {
+    length: uint64;
+    not_present: b"nope";
+    end_: /BB/ &synchronize;
+
+    on %synced {
+        confirm;
+    }
+};

@@ -14,8 +14,9 @@ Dir.chdir("build") do
     exit
   end
 
-  compile_command = `spicy-config --cxx --cxxflags --ldflags`.chomp
-  cxx_command = "#{compile_command} -I . -o bench ../bench.cc bench___linker__.cc bench_Benchmark.cc"
+  compiler = `spicy-config --cxx`.chomp
+  compile_command = `spicy-config --cxxflags --ldflags`.chomp
+  cxx_command = "#{compiler} -I . -o bench ../bench.cc bench___linker__.cc bench_Benchmark.cc #{compile_command}"
   system(cxx_command)
   if $?.exitstatus != 0
     puts "Compilation failed!"

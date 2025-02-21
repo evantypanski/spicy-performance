@@ -18,6 +18,12 @@ public type While = unit {
     end_: b"B";
 };
 
+public type ForeachWhile = unit {
+    length: uint64;
+    data: uint8[] &while=$$=='A' foreach {}
+    end_: b"B";
+};
+
 public type Regex = unit {
     length: uint64;
     data: /A*/;
@@ -64,4 +70,10 @@ public type SyncRegex = unit {
     on %synced {
         confirm;
     }
+};
+
+public type SinkUntil = unit {
+    sink s;
+    on %init { self.s.connect(new BytesUntil); }
+    data: bytes &eod { self.s.write($$); }
 };

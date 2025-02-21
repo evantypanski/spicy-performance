@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <initializer_list>
+#include <iomanip>
 #include <iostream>
 #include <numeric>
 
@@ -73,15 +74,21 @@ auto run_benchmarks(std::initializer_list<std::pair<std::string, ParseFunction>>
 }
 
 int main(int argc, char** argv) {
-    std::initializer_list<std::pair<std::string, ParseFunction>> to_benchmark =
-        {{"BytesLength", hlt_bench::Benchmark::BytesLength::parse1},
-         {"BytesUntil", hlt_bench::Benchmark::BytesUntil::parse1},
-         {"While", hlt_bench::Benchmark::While::parse1},
-         {"Regex", hlt_bench::Benchmark::Regex::parse1},
-         {"WithUnit", hlt_bench::Benchmark::WithUnit::parse1},
-         {"WithUnitSwitch", hlt_bench::Benchmark::WithUnitSwitch::parse1},
-         {"Sync", hlt_bench::Benchmark::Sync::parse1},
-         {"SyncRegex", hlt_bench::Benchmark::SyncRegex::parse1}};
+    std::initializer_list<std::pair<std::string, ParseFunction>> to_benchmark = {
+        //
+        //{"BytesLength", hlt_bench::Benchmark::BytesLength::parse1},
+        //{"BytesUntil", hlt_bench::Benchmark::BytesUntil::parse1},
+        {"While", hlt_bench::Benchmark::While::parse1},
+        {"ForeachWhile", hlt_bench::Benchmark::ForeachWhile::parse1},
+        //{"Regex", hlt_bench::Benchmark::Regex::parse1},
+        //{"WithUnit", hlt_bench::Benchmark::WithUnit::parse1},
+        //{"WithUnitSwitch", hlt_bench::Benchmark::WithUnitSwitch::parse1},
+        //{"Sync", hlt_bench::Benchmark::Sync::parse1},
+        //{"SyncRegex", hlt_bench::Benchmark::SyncRegex::parse1},
+        //{"SyncRegex", hlt_bench::Benchmark::SyncRegex::parse1},
+        //{"SinkUntil", hlt_bench::Benchmark::SinkUntil::parse1}
+        //
+    };
 
     auto results = run_benchmarks(to_benchmark);
 

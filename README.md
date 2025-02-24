@@ -39,17 +39,17 @@ Binpac has one dependency on Zeek for regexes. For these tests, I just removed t
 ```
            Unit | Sample 1 | Sample 2 | Sample 3 | Sample 4 | Sample 5 | Mean
 --------------------------------------------------------------------------------
-    BytesLength |    1.572 |    1.568 |    1.567 |    1.550 |    1.574 | 1.566
-     BytesUntil |    1.606 |    1.592 |    1.637 |    1.640 |    1.642 | 1.623
-     WithRecord |    3.815 |    3.648 |    3.665 |    3.805 |    3.741 | 3.735
- WithRecordCase |    4.154 |    4.137 |    4.145 |    4.129 |    4.139 | 4.141
+    BytesLength |    0.006 |    0.005 |    0.005 |    0.005 |    0.006 | 0.005
+     BytesUntil |    1.640 |    1.640 |    1.649 |    1.623 |    1.621 | 1.635
+     WithRecord |    3.882 |    3.808 |    3.802 |    3.771 |    3.779 | 3.809
+ WithRecordCase |    4.104 |    4.104 |    4.159 |    4.138 |    4.136 | 4.128
 
 
 Results in order:
-    BytesLength: 1.566
-     BytesUntil: 1.623
-     WithRecord: 3.735
- WithRecordCase: 4.141
+    BytesLength: 0.005
+     BytesUntil: 1.635
+     WithRecord: 3.809
+ WithRecordCase: 4.128
 ```
 
 For bytes, `bytestring` is a lot more efficient than `uint8` - indeed, swapping the `&until` for `&length` in `BytesUntil` gets pretty similar results, but then swapping to `bytestring` is low overhead. Though, it is roughly the same as Spicy at that point - I would claim that Spicy is "better" there because you can use `&until` with the more efficient type.

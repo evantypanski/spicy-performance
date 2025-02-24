@@ -7,7 +7,7 @@
 binpac_enabled = true;
 binpac_includes = "-I $HOME/src/binpac/build/lib -I $HOME/src/binpac/lib"
 
-spicy_enabled = false;
+spicy_enabled = true;
 
 Dir.mkdir("build") unless Dir.exist?("build")
 
@@ -48,7 +48,7 @@ Dir.chdir("build") do
 
     compiler = `spicy-config --cxx`.chomp
     compile_command = `spicy-config --cxxflags --ldflags`.chomp
-    cxx_command = "#{compiler} -I . -o bench ../bench.cc bench___linker__.cc bench_Benchmark.cc #{compile_command}"
+    cxx_command = "#{compiler} -I . -o spicy-bench ../bench.cc bench___linker__.cc bench_Benchmark.cc #{compile_command}"
     system(cxx_command)
     if $?.exitstatus != 0
       puts "Compilation failed!"

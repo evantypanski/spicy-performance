@@ -1,11 +1,13 @@
 #include <ctime>
-#include <initializer_list>
 #include <iomanip>
 #include <iostream>
 #include <map>
 #include <numeric>
 
-#include "test_pac.h"
+#include "bytes_length_pac.h"
+#include "bytes_until_pac.h"
+#include "with_record_case_pac.h"
+#include "with_record_pac.h"
 
 constexpr uint64_t samples = 5;
 
@@ -51,7 +53,6 @@ int main(int argc, char** argv) {
     std::map<std::string, std::array<double, samples>> results;
     // I don't feel like doing template shenanigans for binpac right now
     results["WithRecord"] = {};
-    std::cout << "\r" << std::string(30, ' ') << "\r";
     std::cout << "Sampling " << "WithRecord" << "\n";
 
     for ( uint64_t i = 0; i < samples; i++ ) {
@@ -59,7 +60,40 @@ int main(int argc, char** argv) {
         // Binpac keeps trying to free statically allocated stuff so this is dynamic :)
         binpac::WithRecord::WithRecordConn* conn = new binpac::WithRecord::WithRecordConn();
         results["WithRecord"][i] = time_parser(input, *conn);
-        std::cout << results["WithRecord"][i];
+    }
+    results["BytesUntil"] = {};
+    std::cout << "\r" << std::string(30, ' ') << "\r";
+    std::cout << "Sampling " << "BytesUntil" << "\n";
+
+    for ( uint64_t i = 0; i < samples; i++ ) {
+        std::cout << "\rSampling " << i + 1 << "/" << samples << "..." << std::flush;
+        // Binpac keeps trying to free statically allocated stuff so this is dynamic :)
+        binpac::BytesUntil::BytesUntilConn* conn = new binpac::BytesUntil::BytesUntilConn();
+        results["BytesUntil"][i] = time_parser(input, *conn);
+    }
+
+    std::cout << "\r" << std::string(30, ' ') << "\r";
+
+    results["BytesLength"] = {};
+    std::cout << "\r" << std::string(30, ' ') << "\r";
+    std::cout << "Sampling " << "BytesLength" << "\n";
+
+    for ( uint64_t i = 0; i < samples; i++ ) {
+        std::cout << "\rSampling " << i + 1 << "/" << samples << "..." << std::flush;
+        // Binpac keeps trying to free statically allocated stuff so this is dynamic :)
+        binpac::BytesLength::BytesLengthConn* conn = new binpac::BytesLength::BytesLengthConn();
+        results["BytesLength"][i] = time_parser(input, *conn);
+    }
+    std::cout << "\r" << std::string(30, ' ') << "\r";
+
+    results["WithRecordCase"] = {};
+    std::cout << "Sampling " << "WithRecordCase" << "\n";
+
+    for ( uint64_t i = 0; i < samples; i++ ) {
+        std::cout << "\rSampling " << i + 1 << "/" << samples << "..." << std::flush;
+        // Binpac keeps trying to free statically allocated stuff so this is dynamic :)
+        binpac::WithRecordCase::WithRecordCaseConn* conn = new binpac::WithRecordCase::WithRecordCaseConn();
+        results["WithRecordCase"][i] = time_parser(input, *conn);
     }
     std::cout << "Done sampling!\n\n";
 

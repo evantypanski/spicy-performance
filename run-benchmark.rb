@@ -11,15 +11,25 @@ spicy_enabled = false;
 
 Dir.mkdir("build") unless Dir.exist?("build")
 
+binpac_cc_files = []
 if binpac_enabled
+  files = Dir.entries("binpac").select do |entry|
+    File.file?(File.join("binpac", entry)) && File.extname(entry) == '.pac'
+  end
   Dir.chdir("binpac") do
-    system("binpac test.pac")
+    files.each do |file|
+      system("binpac #{file}")
+    end
   end
   # This is dumb. I can't figure out how to get the binpac executable to move stuff to a
   # different directory. -d just says "No such file or directory" yeah cool.
   require 'fileutils'
-  FileUtils.mv("binpac/test_pac.cc", "build")
-  FileUtils.mv("binpac/test_pac.h", "build")
+  files.each do |file|
+    file_name = File.basename(file, File.extname(file))
+    FileUtils.mv("binpac/#{file_name}_pac.cc", "build")
+    FileUtils.mv("binpac/#{file_name}_pac.h", "build")
+    binpac_cc_files << "#{file_name}_pac.cc"
+  end
 end
 
 
@@ -53,8 +63,9 @@ Dir.chdir("build") do
   end
 
   if binpac_enabled
+    binpac_files_str = binpac_cc_files.join(' ')
     # Just assume the binpac compile command, I don't care enough
-    system("clang++ ../bench_binpac.cc test_pac.cc -I . #{binpac_includes} -o binpac-bench")
+    system("clang++ ../bench_binpac.cc #{binpac_files_str} -I . #{binpac_includes} -o binpac-bench")
 
     puts "\n" * 2
     puts "Running Binpac benchmarks!"

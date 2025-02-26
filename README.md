@@ -34,6 +34,9 @@ Results in order:
  WithUnitSwitch: 17.232
 ```
 
+> [!NOTE]
+> There is a separate `RegexCharacterClass` which only shows a considerable difference when the input is with `Z`'s. The mean for that one with `Z` in my run is 13.514 seconds - so 32% slower than `A*` (or, equivalently, `Z*` when it's all `Z`'s).
+
 ## Binpac
 
 Binpac has one dependency on Zeek for regexes. For these tests, I just removed that from the runtime - the rest of it seems to work fine.
@@ -57,3 +60,36 @@ Results in order:
 For bytes, `bytestring` is a lot more efficient than `uint8` - indeed, swapping the `&until` for `&length` in `BytesUntil` gets pretty similar results, but then swapping to `bytestring` is low overhead. Though, it is roughly the same as Spicy at that point - I would claim that Spicy is "better" there because you can use `&until` with the more efficient type.
 
 The big difference here is that the gap between `BytesLength` and the equivalent `WithUnit` is a lot larger in Spicy. That seems to be the biggest difference between the two, unless regex as well has a large difference. This would make sense - parsers almost always split data among many units, but it turns out that is expensive. Binpac isn't itself fast, but it's faster than Spicy's equivalent.
+
+### Binpac patterns
+
+Regular expressions in binpac are done via Zeek's regex patterns. In order to get this to work, I made a plugin which runs just the regex benchmark. The results look like this regardless of pattern:
+
+```
+           Unit | Sample 1 | Sample 2 | Sample 3 | Sample 4 | Sample 5 | Mean
+--------------------------------------------------------------------------------
+          Regex |    0.376 |    0.381 |    0.380 |    0.380 |    0.370 | 0.378
+
+
+Results in order:
+          Regex: 0.378
+```
+
+In order to get this to work, I had to add a `Compile` call to the matcher in binpac's regex header:
+
+```
+diff --git a/lib/binpac_regex.h b/lib/binpac_regex.h
+index d8e2a05..24fa852 100644
+--- a/lib/binpac_regex.h
++++ b/lib/binpac_regex.h
+@@ -28,6 +28,7 @@ public:
+             uncompiled_re_matchers = new std::vector<zeek::RE_Matcher*>;
+ 
+         re_matcher_ = new zeek::RE_Matcher(pattern_.c_str());
++        re_matcher_->Compile();
+         uncompiled_re_matchers->push_back(re_matcher_);
+     }
+ 
+```
+
+Maybe I'm doing something wrong, but it wouldn't compile the pattern without that.

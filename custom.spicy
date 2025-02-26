@@ -30,6 +30,12 @@ public type Regex = unit {
     end_: b"BB";
 };
 
+public type RegexCharacterClass = unit {
+    length: uint64;
+    data: /[ACEGIKMOQSUWYZ]*/;
+    end_: b"BB";
+};
+
 public type WithUnit = unit {
     length: uint64;
     inner: Inner[] &size=self.length;

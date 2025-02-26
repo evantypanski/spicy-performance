@@ -1,0 +1,22 @@
+# Regex parsing
+
+analyzer Regex withcontext {
+	connection:	 RegexConn;
+	flow:		 RegexFlow;
+};
+
+connection RegexConn() {
+	upflow = RegexFlow(true);
+	downflow = RegexFlow(false);
+};
+
+type DATA_RE = RE/A+/;
+type Regex = record {
+    length: uint64;
+    data: DATA_RE;
+    rest: uint16;
+} &byteorder = bigendian;
+
+flow RegexFlow(is_orig: bool) {
+	datagram = Regex withcontext(connection, this);
+};

@@ -4,9 +4,26 @@ Analyzing the performance of [Spicy](https://github.com/zeek/spicy) in various c
 
 This is just a set of experiments I have been working on to judge Spicy's performance from a user's perspective. It's not meant to give a super detailed account of how to "fix" any performance issues, it's meant to be transparent about where Spicy may be slow so that users may know.
 
+# Results
+
+The main results are:
+
+1) Spicy patterns are 27x slower than binpac over 100MB of A's - depending on the protocol, this may get very expensive. Spicy units are also about 3-4x slower than binpac records. These both are very common patterns, so this could account for a significant parsing speed difference.
+2) Synchronization is "fairly slow" - but not necessarily worrisome. This seems expected and fine.
+
+That's about it. For parsing speed, the lowest hanging fruit by a longshot are regular expressions: they are commonly used and far slower than binpac. But, the utility here might be overstated, as many parsers may not use patterns for large amounts of data.
+
+Unit overhead is significant, but this can possibly be fixed in other ways. For example, there can be a language feature which is simply "plain old data" to allow users to group logical units together without overhead for hooks and whatnot. This can also be done by an optimizer.
+
+There are other minor points: switches in Spicy are relatively slow, and some parsers (like from what I can tell the SSL spicy parser) spend significant time on switch logic. I don't have any ideas for speedup here, but it may be worth noticing :)
+
+This only looked at parsing speed between Spicy and binpac. There are two other points which may be worthwhile to look at: Spicy->Zeek value conversion overhead and fiber overhead. I have nothing to say about those based on this.
+
+# Spicy
+
 Every unit is testing a different feature with the same input. It's not exactly perfect, but it will give a sense of how much slower it is to refactor something into a unit vs. use `bytes &until=` vs. a regex, for example.
 
-Here is the output from the initial run I did:
+Here is the output on my computer:
 
 ```
            Unit | Sample 1 | Sample 2 | Sample 3 | Sample 4 | Sample 5 | Mean

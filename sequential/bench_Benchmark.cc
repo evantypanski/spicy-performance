@@ -261,14 +261,11 @@ auto __hlt_bench::Benchmark::Inner::__parse_Benchmark__Inner_stage2(
     -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
                   ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:3:14-5:1");
     std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>, ::hilti::rt::stream::SafeConstIterator,
                std::optional<::hilti::rt::RecoverableFailure>>
         __result;
 
     {
-        __location__("../custom.spicy:4:8-4:12");
-
         // Begin parsing production: Variable: b   -> uint<8>;
         ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{1U},
                                           "expecting 1 bytes for unpacking value"sv, "../custom.spicy:4:8-4:12"sv,
@@ -283,7 +280,6 @@ auto __hlt_bench::Benchmark::Inner::__parse_Benchmark__Inner_stage2(
         // End parsing production: Variable: b   -> uint<8>;
     }
 
-    ::hilti::rt::debug::dedent("spicy"sv);
     __result = std::make_tuple(__cur, __lah, __lahe, __error);
     return __result;
 }
@@ -297,13 +293,11 @@ auto __hlt_bench::Benchmark::Inner::__parse_stage1(::hilti::rt::ValueReference<:
     -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
                   ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:3:14-5:1");
     std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>, ::hilti::rt::stream::SafeConstIterator,
                std::optional<::hilti::rt::RecoverableFailure>>
         __result;
 
     {
-        ::hilti::rt::debug::indent("spicy"sv);
         ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
         ::hilti::rt::StrongReference<::hilti::rt::Stream> filtered =
             ::hilti::rt::StrongReference<::hilti::rt::Stream>();
@@ -322,14 +316,11 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
     -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
                   ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:7:24-11:1");
     std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>, ::hilti::rt::stream::SafeConstIterator,
                std::optional<::hilti::rt::RecoverableFailure>>
         __result;
 
     {
-        __location__("../custom.spicy:8:13-8:18");
-
         // Begin parsing production: Variable: length -> uint<64>;
         ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{8U},
                                           "expecting 8 bytes for unpacking value"sv, "../custom.spicy:8:13-8:18"sv,
@@ -345,7 +336,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
     }
 
     {
-        __location__("../custom.spicy:9:5-9:37");
         ::hilti::rt::integer::safe<uint64_t> __pre_container_offset = ::hilti::rt::integer::safe<std::uint64_t>{0U};
 
         // Begin parsing production: ForEach: inner -> foreach: Resolved_3;
@@ -356,7 +346,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
                                          ::hilti::rt::optional::valueOrInit((*this).inner));
         if ( __limited_.offset() < __ncur.offset() ) {
             (*this).inner.reset();
-            __location__("../custom.spicy:9:20-9:36");
             throw ::spicy::rt::
                 ParseError(::hilti::rt::fmt("&size amount not consumed: expected %llu bytes, but got %llu bytes"sv,
                                             ::hilti::rt::optional::value((*this).length),
@@ -373,7 +362,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
 
     {
         ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters> __lhs_1;
-        __location__("../custom.spicy:10:11-10:15");
 
         // Begin parsing production: Ctor: end_ -> b"BB" (const bytes);
         ::spicy::rt::detail::expectBytesLiteral(__data, __cur, __hlt_bench::Benchmark::__ctor__bytes,
@@ -389,7 +377,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
         // End parsing production: Ctor: end_ -> b"BB" (const bytes);
     }
 
-    ::hilti::rt::debug::dedent("spicy"sv);
     __result = std::make_tuple(__cur, __lah, __lahe, __error);
     return __result;
 }
@@ -405,7 +392,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
                   ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters> __lhs_2;
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:9:5-9:37");
     std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>, ::hilti::rt::stream::SafeConstIterator,
                std::optional<::hilti::rt::RecoverableFailure>>
         __result;
@@ -416,7 +402,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
         ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters> __lhs_3;
         ::hilti::rt::stream::SafeConstIterator __old_begin = __cur.begin();
         ::hilti::rt::ValueReference<__hlt_bench::Benchmark::Inner> __elem;
-        __location__("../custom.spicy:3:14-5:1");
 
         // Begin parsing production: Unit: Benchmark__Inner_2 -> b_2 (container 'inner');
         __elem = (__hlt_bench::Benchmark::Inner());
@@ -430,7 +415,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
              (! (::spicy::rt::detail::atEod(__data, __cur,
                                             (__lhs_3 = (::hilti::rt::StrongReference<
                                                         ::spicy::rt::filter::detail::Filters>()))))) ) {
-            __location__("../custom.spicy:9:5-9:37");
             throw ::spicy::rt::ParseError("loop body did not change input position, possible infinite loop"sv,
                                           "../custom.spicy:9:5-9:37");
         }
@@ -449,13 +433,11 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_stage1(::hilti::rt::ValueReferenc
     -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
                   ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:7:24-11:1");
     std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>, ::hilti::rt::stream::SafeConstIterator,
                std::optional<::hilti::rt::RecoverableFailure>>
         __result;
 
     {
-        ::hilti::rt::debug::indent("spicy"sv);
         ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
         ::hilti::rt::StrongReference<::hilti::rt::Stream> filtered =
             ::hilti::rt::StrongReference<::hilti::rt::Stream>();
@@ -473,14 +455,12 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse1(::hilti::rt::ValueReference
                                                      const std::optional<::spicy::rt::UnitContext>& __context)
     -> ::hilti::rt::stream::View {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:7:24-11:1");
     ::hilti::rt::ValueReference<__hlt_bench::Benchmark::WithUnit> __unit =
         ::hilti::rt::reference::make_value<__hlt_bench::Benchmark::WithUnit>((__hlt_bench::Benchmark::WithUnit()));
     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
     ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
     ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
-    __location__("../custom.spicy:7:24-11:1");
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
     std::tie(__ncur, __lahead, __lahead_end, __error) =
@@ -503,12 +483,10 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse2(
     ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const std::optional<::hilti::rt::stream::View>& __cur,
     const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:7:24-11:1");
     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
     ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
     ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
-    __location__("../custom.spicy:7:24-11:1");
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
     std::tie(__ncur, __lahead, __lahead_end, __error) =
@@ -532,7 +510,6 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse3(::hilti::rt::ValueReference
                                                      const std::optional<::spicy::rt::UnitContext>& __context)
     -> ::hilti::rt::stream::View {
     ::hilti::rt::detail::checkStack();
-    __location__("../custom.spicy:7:24-11:1");
     ::hilti::rt::ValueReference<__hlt_bench::Benchmark::WithUnit> __unit =
         ::hilti::rt::reference::make_value<__hlt_bench::Benchmark::WithUnit>((__hlt_bench::Benchmark::WithUnit()));
     ::spicy::rt::ParsedUnit::initialize((*__gunit), __unit,
@@ -541,7 +518,6 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse3(::hilti::rt::ValueReference
     ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
     ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
-    __location__("../custom.spicy:7:24-11:1");
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
     std::tie(__ncur, __lahead, __lahead_end, __error) =

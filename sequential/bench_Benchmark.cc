@@ -13,13 +13,6 @@ struct Inner;
 struct WithUnit;
 struct Inner : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<Inner> {
     std::optional<::hilti::rt::integer::safe<uint8_t>> b{};
-    auto __parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
-                        const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur,
-                        ::hilti::rt::Bool __trim, ::hilti::rt::integer::safe<int64_t> __lah,
-                        ::hilti::rt::stream::SafeConstIterator __lahe,
-                        std::optional<::hilti::rt::RecoverableFailure> __error)
-        -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                      ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
     std::optional<::hilti::rt::RecoverableFailure> __error{};
     Inner();
     Inner(const Inner&) = default;
@@ -42,11 +35,8 @@ struct WithUnit : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<WithUn
     inline static ::spicy::rt::Parser __parser{};
     auto __parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                         const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur,
-                        ::hilti::rt::Bool __trim, ::hilti::rt::integer::safe<int64_t> __lah,
-                        ::hilti::rt::stream::SafeConstIterator __lahe,
-                        std::optional<::hilti::rt::RecoverableFailure> __error)
-        -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                      ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
+                        ::hilti::rt::Bool __trim, std::optional<::hilti::rt::RecoverableFailure> __error)
+        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
     static auto parse1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                        const std::optional<::hilti::rt::stream::View>& __cur,
                        const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View;
@@ -60,19 +50,14 @@ struct WithUnit : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<WithUn
                        const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View;
     auto __parse_inner_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                               const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur,
-                              ::hilti::rt::Bool __trim, ::hilti::rt::integer::safe<int64_t> __lah,
-                              ::hilti::rt::stream::SafeConstIterator __lahe,
-                              std::optional<::hilti::rt::RecoverableFailure> __error, ::hilti::rt::Vector<Inner>& __dst)
-        -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                      ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
+                              ::hilti::rt::Bool __trim, std::optional<::hilti::rt::RecoverableFailure> __error,
+                              ::hilti::rt::Vector<Inner>& __dst)
+        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
     auto __parse_Benchmark__WithUnit_stage2(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                                             const ::hilti::rt::stream::SafeConstIterator& __begin,
                                             ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
-                                            ::hilti::rt::integer::safe<int64_t> __lah,
-                                            ::hilti::rt::stream::SafeConstIterator __lahe,
                                             std::optional<::hilti::rt::RecoverableFailure> __error)
-        -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                      ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
+        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
     std::optional<::hilti::rt::RecoverableFailure> __error{};
     WithUnit();
     WithUnit(const WithUnit&) = default;
@@ -246,43 +231,10 @@ const ::hilti::rt::TypeInfo __ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx
 
 HILTI_PRE_INIT(__hlt_bench::Benchmark::__register_module)
 
-auto __hlt_bench::Benchmark::Inner::__parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
-                                                   const ::hilti::rt::stream::SafeConstIterator& __begin,
-                                                   ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
-                                                   ::hilti::rt::integer::safe<int64_t> __lah,
-                                                   ::hilti::rt::stream::SafeConstIterator __lahe,
-                                                   std::optional<::hilti::rt::RecoverableFailure> __error)
-    -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                  ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
-    {
-        ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
-        ::hilti::rt::StrongReference<::hilti::rt::Stream> filtered =
-            ::hilti::rt::StrongReference<::hilti::rt::Stream>();
-        if ( ! (::hilti::rt::Bool(static_cast<bool>(filtered))) ) {
-            // Begin parsing production: Variable: b   -> uint<8>;
-            ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{1U},
-                                              "expecting 1 bytes for unpacking value"sv, "../custom.spicy:4:8-4:12"sv,
-                                              ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters>());
-            std::tie(::hilti::rt::optional::valueOrInit((*this).b), __cur) =
-                ::hilti::rt::integer::unpack<uint8_t>(__cur, ::hilti::rt::ByteOrder{::hilti::rt::ByteOrder::Network})
-                    .valueOrThrow();
-            if ( __trim ) {
-                (*__data).trim(__cur.begin());
-            }
-
-            // End parsing production: Variable: b   -> uint<8>;
-        }
-
-        return std::make_tuple(__cur, __lah, __lahe, __error);
-    }
-}
-
 auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
     ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const ::hilti::rt::stream::SafeConstIterator& __begin,
-    ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim, ::hilti::rt::integer::safe<int64_t> __lah,
-    ::hilti::rt::stream::SafeConstIterator __lahe, std::optional<::hilti::rt::RecoverableFailure> __error)
-    -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                  ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
+    ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim, std::optional<::hilti::rt::RecoverableFailure> __error)
+    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
     {
         // Begin parsing production: Variable: length -> uint<64>;
         ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{8U},
@@ -304,9 +256,8 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
         // Begin parsing production: ForEach: inner -> foreach: Resolved_3;
         ::hilti::rt::stream::View __limited_ = __cur.limit(::hilti::rt::optional::value((*this).length));
         ::hilti::rt::stream::View __ncur = __cur.advance(::hilti::rt::optional::value((*this).length));
-        std::tie(__limited_, __lah, __lahe, __error) =
-            (*this).__parse_inner_stage1(__data, __begin, __limited_, __trim, __lah, __lahe, __error,
-                                         ::hilti::rt::optional::valueOrInit((*this).inner));
+        std::tie(__limited_, __error) = (*this).__parse_inner_stage1(__data, __begin, __limited_, __trim, __error,
+                                                                     ::hilti::rt::optional::valueOrInit((*this).inner));
         if ( __limited_.offset() < __ncur.offset() ) {
             (*this).inner.reset();
             throw ::spicy::rt::
@@ -340,18 +291,16 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
         // End parsing production: Ctor: end_ -> b"BB" (const bytes);
     }
 
-    return std::make_tuple(__cur, __lah, __lahe, __error);
+    return std::make_tuple(__cur, __error);
 }
 
 auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                                                             const ::hilti::rt::stream::SafeConstIterator& __begin,
                                                             ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
-                                                            ::hilti::rt::integer::safe<int64_t> __lah,
-                                                            ::hilti::rt::stream::SafeConstIterator __lahe,
+
                                                             std::optional<::hilti::rt::RecoverableFailure> __error,
                                                             ::hilti::rt::Vector<__hlt_bench::Benchmark::Inner>& __dst)
-    -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                  ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
+    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
     ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters> __lhs_2;
     while (
         ! (::spicy::rt::detail::atEod(__data, __cur,
@@ -363,8 +312,24 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
 
         // Begin parsing production: Unit: Benchmark__Inner_2 -> b_2 (container 'inner');
         __elem = (__hlt_bench::Benchmark::Inner());
-        std::tie(__cur, __lah, __lahe, __error) =
-            (*__elem).__parse_stage1(__data, __begin, __cur, __trim, __lah, __lahe, __error);
+
+        {
+            ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
+            // Begin parsing production: Variable: b   -> uint<8>;
+            ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{1U},
+                                              "expecting 1 bytes for unpacking value"sv, "../custom.spicy:4:8-4:12"sv,
+                                              ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters>());
+            std::tie(::hilti::rt::optional::valueOrInit((*__elem).b), __cur) =
+                ::hilti::rt::integer::unpack<uint8_t>(__cur, ::hilti::rt::ByteOrder{::hilti::rt::ByteOrder::Network})
+                    .valueOrThrow();
+            if ( __trim ) {
+                (*__data).trim(__cur.begin());
+
+                // End parsing production: Variable: b   -> uint<8>;
+            }
+
+            std::tie(__cur, __error) = std::make_tuple(__cur, __error);
+        }
         // End parsing production: Unit: Benchmark__Inner_2 -> b_2 (container 'inner');
 
         __dst.emplace_back((*__elem));
@@ -378,24 +343,18 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
         }
     }
 
-    return std::make_tuple(__cur, __lah, __lahe, __error);
+    return std::make_tuple(__cur, __error);
 }
 
 auto __hlt_bench::Benchmark::WithUnit::__parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                                                       const ::hilti::rt::stream::SafeConstIterator& __begin,
                                                       ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
-                                                      ::hilti::rt::integer::safe<int64_t> __lah,
-                                                      ::hilti::rt::stream::SafeConstIterator __lahe,
+
                                                       std::optional<::hilti::rt::RecoverableFailure> __error)
-    -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                  ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
+    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
     {
         ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
-        ::hilti::rt::StrongReference<::hilti::rt::Stream> filtered =
-            ::hilti::rt::StrongReference<::hilti::rt::Stream>();
-        if ( ! (::hilti::rt::Bool(static_cast<bool>(filtered))) ) {
-            return (*this).__parse_Benchmark__WithUnit_stage2(__data, __begin, __cur, __trim, __lah, __lahe, __error);
-        }
+        return (*this).__parse_Benchmark__WithUnit_stage2(__data, __begin, __cur, __trim, __error);
     }
 
     // Won't get reached
@@ -408,14 +367,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse1(::hilti::rt::ValueReference
     ::hilti::rt::ValueReference<__hlt_bench::Benchmark::WithUnit> __unit =
         ::hilti::rt::reference::make_value<__hlt_bench::Benchmark::WithUnit>((__hlt_bench::Benchmark::WithUnit()));
     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
-    ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
-    ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
-    std::tie(__ncur, __lahead, __lahead_end, __error) =
-        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __lahead, __lahead_end,
-                                 __error);
+    std::tie(__ncur, __error) =
+        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __error);
     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
 
     if ( __error.has_value() ) {
@@ -433,14 +389,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse2(
     ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const std::optional<::hilti::rt::stream::View>& __cur,
     const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View {
     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
-    ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
-    ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
-    std::tie(__ncur, __lahead, __lahead_end, __error) =
-        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __lahead, __lahead_end,
-                                 __error);
+    std::tie(__ncur, __error) =
+        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __error);
     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
 
     if ( __error.has_value() ) {
@@ -463,14 +416,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse3(::hilti::rt::ValueReference
     ::spicy::rt::ParsedUnit::initialize((*__gunit), __unit,
                                         &type_info::__ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx2b);
     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
-    ::hilti::rt::integer::safe<int64_t> __lahead = ::hilti::rt::integer::safe<std::int64_t>{0};
-    ::hilti::rt::stream::SafeConstIterator __lahead_end;
     std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
 
     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
-    std::tie(__ncur, __lahead, __lahead_end, __error) =
-        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __lahead, __lahead_end,
-                                 __error);
+    std::tie(__ncur, __error) =
+        (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, ::hilti::rt::Bool(true), __error);
     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
 
     if ( __error.has_value() ) {

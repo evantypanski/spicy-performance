@@ -1,0 +1,11 @@
+module Benchmark;
+
+type Inner = unit {
+    b: uint8;
+};
+
+public type WithUnit = unit {
+    length: uint64;
+    inner: Inner[] &size=self.length;
+    end_: b"BB";
+};

@@ -20,14 +20,6 @@ struct Inner : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<Inner> {
                         std::optional<::hilti::rt::RecoverableFailure> __error)
         -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
                       ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
-    auto __parse_Benchmark__Inner_stage2(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
-                                         const ::hilti::rt::stream::SafeConstIterator& __begin,
-                                         ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
-                                         ::hilti::rt::integer::safe<int64_t> __lah,
-                                         ::hilti::rt::stream::SafeConstIterator __lahe,
-                                         std::optional<::hilti::rt::RecoverableFailure> __error)
-        -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                      ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>>;
     std::optional<::hilti::rt::RecoverableFailure> __error{};
     Inner();
     Inner(const Inner&) = default;
@@ -254,30 +246,6 @@ const ::hilti::rt::TypeInfo __ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx
 
 HILTI_PRE_INIT(__hlt_bench::Benchmark::__register_module)
 
-auto __hlt_bench::Benchmark::Inner::__parse_Benchmark__Inner_stage2(
-    ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const ::hilti::rt::stream::SafeConstIterator& __begin,
-    ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim, ::hilti::rt::integer::safe<int64_t> __lah,
-    ::hilti::rt::stream::SafeConstIterator __lahe, std::optional<::hilti::rt::RecoverableFailure> __error)
-    -> std::tuple<::hilti::rt::stream::View, ::hilti::rt::integer::safe<int64_t>,
-                  ::hilti::rt::stream::SafeConstIterator, std::optional<::hilti::rt::RecoverableFailure>> {
-    {
-        // Begin parsing production: Variable: b   -> uint<8>;
-        ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{1U},
-                                          "expecting 1 bytes for unpacking value"sv, "../custom.spicy:4:8-4:12"sv,
-                                          ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters>());
-        std::tie(::hilti::rt::optional::valueOrInit((*this).b), __cur) =
-            ::hilti::rt::integer::unpack<uint8_t>(__cur, ::hilti::rt::ByteOrder{::hilti::rt::ByteOrder::Network})
-                .valueOrThrow();
-        if ( __trim ) {
-            (*__data).trim(__cur.begin());
-        }
-
-        // End parsing production: Variable: b   -> uint<8>;
-    }
-
-    return std::make_tuple(__cur, __lah, __lahe, __error);
-}
-
 auto __hlt_bench::Benchmark::Inner::__parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
                                                    const ::hilti::rt::stream::SafeConstIterator& __begin,
                                                    ::hilti::rt::stream::View __cur, ::hilti::rt::Bool __trim,
@@ -291,11 +259,22 @@ auto __hlt_bench::Benchmark::Inner::__parse_stage1(::hilti::rt::ValueReference<:
         ::hilti::rt::StrongReference<::hilti::rt::Stream> filtered =
             ::hilti::rt::StrongReference<::hilti::rt::Stream>();
         if ( ! (::hilti::rt::Bool(static_cast<bool>(filtered))) ) {
-            return (*this).__parse_Benchmark__Inner_stage2(__data, __begin, __cur, __trim, __lah, __lahe, __error);
-        }
-    }
+            // Begin parsing production: Variable: b   -> uint<8>;
+            ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{1U},
+                                              "expecting 1 bytes for unpacking value"sv, "../custom.spicy:4:8-4:12"sv,
+                                              ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters>());
+            std::tie(::hilti::rt::optional::valueOrInit((*this).b), __cur) =
+                ::hilti::rt::integer::unpack<uint8_t>(__cur, ::hilti::rt::ByteOrder{::hilti::rt::ByteOrder::Network})
+                    .valueOrThrow();
+            if ( __trim ) {
+                (*__data).trim(__cur.begin());
+            }
 
-    // Won't get reached
+            // End parsing production: Variable: b   -> uint<8>;
+        }
+
+        return std::make_tuple(__cur, __lah, __lahe, __error);
+    }
 }
 
 auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(

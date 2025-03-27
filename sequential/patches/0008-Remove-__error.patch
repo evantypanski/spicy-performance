@@ -1,0 +1,249 @@
+From 65f8767b231305859dbdc62c16941391aace940f Mon Sep 17 00:00:00 2001
+From: Evan Typanski <evan.typanski@corelight.com>
+Date: Thu, 27 Mar 2025 13:08:19 -0400
+Subject: [PATCH 8/8] Remove `__error`
+
+---
+ sequential/bench_Benchmark.cc | 115 +++++++++++-----------------------
+ 1 file changed, 36 insertions(+), 79 deletions(-)
+
+diff --git a/sequential/bench_Benchmark.cc b/sequential/bench_Benchmark.cc
+index cd80275..995ae72 100644
+--- a/sequential/bench_Benchmark.cc
++++ b/sequential/bench_Benchmark.cc
+@@ -13,7 +13,6 @@ struct Inner;
+ struct WithUnit;
+ struct Inner : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<Inner> {
+     std::optional<::hilti::rt::integer::safe<uint8_t>> b{};
+-    std::optional<::hilti::rt::RecoverableFailure> __error{};
+     Inner();
+     Inner(const Inner&) = default;
+     Inner(Inner&&) = default;
+@@ -34,9 +33,8 @@ struct WithUnit : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<WithUn
+     std::optional<::hilti::rt::Bytes> end_{};
+     inline static ::spicy::rt::Parser __parser{};
+     auto __parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+-                        const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur,
+-                        std::optional<::hilti::rt::RecoverableFailure> __error)
+-        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
++                        const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur)
++        -> ::hilti::rt::stream::View;
+     static auto parse1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+                        const std::optional<::hilti::rt::stream::View>& __cur,
+                        const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View;
+@@ -50,14 +48,10 @@ struct WithUnit : ::hilti::rt::trait::isStruct, ::hilti::rt::Controllable<WithUn
+                        const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View;
+     auto __parse_inner_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+                               const ::hilti::rt::stream::SafeConstIterator& __begin, ::hilti::rt::stream::View __cur,
+-                              std::optional<::hilti::rt::RecoverableFailure> __error, ::hilti::rt::Vector<Inner>& __dst)
+-        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
++                              ::hilti::rt::Vector<Inner>& __dst) -> ::hilti::rt::stream::View;
+     auto __parse_Benchmark__WithUnit_stage2(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+                                             const ::hilti::rt::stream::SafeConstIterator& __begin,
+-                                            ::hilti::rt::stream::View __cur,
+-                                            std::optional<::hilti::rt::RecoverableFailure> __error)
+-        -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>>;
+-    std::optional<::hilti::rt::RecoverableFailure> __error{};
++                                            ::hilti::rt::stream::View __cur) -> ::hilti::rt::stream::View;
+     WithUnit();
+     WithUnit(const WithUnit&) = default;
+     WithUnit(WithUnit&&) = default;
+@@ -182,15 +176,12 @@ const ::hilti::rt::TypeInfo __ti_Benchmark__Inner_namex2aBenchmark__Innerx2b =
+      [](const void* self) {
+          return hilti::rt::to_string(*reinterpret_cast<const __hlt_bench::Benchmark::Inner*>(self));
+      },
+-     new ::hilti::rt::type_info::Struct(std::vector<::hilti::rt::type_info::struct_::Field>(
+-         {::hilti::rt::type_info::struct_::Field{"b", &::hilti::rt::type_info::uint8, offsetof(Benchmark::Inner, b),
+-                                                 false, false,
+-                                                 ::hilti::rt::type_info::struct_::Field::accessor_optional<
+-                                                     ::hilti::rt::integer::safe<uint8_t>>()},
+-          ::hilti::rt::type_info::struct_::Field{
+-              "__error",
+-              &type_info::__ti_optional_spicy__RecoverableFailure__optionalx2anamex2ahilti__RecoverableFailurex2bx2b,
+-              offsetof(Benchmark::Inner, __error), true, false}}))};
++     new ::hilti::rt::type_info::Struct(std::vector<::hilti::rt::type_info::struct_::Field>({
++         ::hilti::rt::type_info::struct_::Field{"b", &::hilti::rt::type_info::uint8, offsetof(Benchmark::Inner, b),
++                                                false, false,
++                                                ::hilti::rt::type_info::struct_::Field::accessor_optional<
++                                                    ::hilti::rt::integer::safe<uint8_t>>()},
++     }))};
+ extern const ::hilti::rt::TypeInfo __ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx2b;
+ extern const ::hilti::rt::TypeInfo __ti_vector_Inner__vectorx2anamex2aBenchmark__Innerx2bx2b;
+ const ::hilti::rt::TypeInfo __ti_vector_Inner__vectorx2anamex2aBenchmark__Innerx2bx2b =
+@@ -207,24 +198,21 @@ const ::hilti::rt::TypeInfo __ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx
+      [](const void* self) {
+          return hilti::rt::to_string(*reinterpret_cast<const __hlt_bench::Benchmark::WithUnit*>(self));
+      },
+-     new ::hilti::rt::type_info::Struct(std::vector<::hilti::rt::type_info::struct_::Field>(
+-         {::hilti::rt::type_info::struct_::Field{"length", &::hilti::rt::type_info::uint64,
+-                                                 offsetof(Benchmark::WithUnit, length), false, false,
+-                                                 ::hilti::rt::type_info::struct_::Field::accessor_optional<
+-                                                     ::hilti::rt::integer::safe<uint64_t>>()},
+-          ::hilti::rt::type_info::struct_::Field{"inner",
+-                                                 &type_info::__ti_vector_Inner__vectorx2anamex2aBenchmark__Innerx2bx2b,
+-                                                 offsetof(Benchmark::WithUnit, inner), false, false,
+-                                                 ::hilti::rt::type_info::struct_::Field::accessor_optional<
+-                                                     ::hilti::rt::Vector<__hlt_bench::Benchmark::Inner>>()},
+-          ::hilti::rt::type_info::struct_::Field{"end_", &::hilti::rt::type_info::bytes,
+-                                                 offsetof(Benchmark::WithUnit, end_), false, false,
+-                                                 ::hilti::rt::type_info::struct_::Field::accessor_optional<
+-                                                     ::hilti::rt::Bytes>()},
+-          ::hilti::rt::type_info::struct_::Field{
+-              "__error",
+-              &type_info::__ti_optional_spicy__RecoverableFailure__optionalx2anamex2ahilti__RecoverableFailurex2bx2b,
+-              offsetof(Benchmark::WithUnit, __error), true, false}}))};
++     new ::hilti::rt::type_info::Struct(std::vector<::hilti::rt::type_info::struct_::Field>({
++         ::hilti::rt::type_info::struct_::Field{"length", &::hilti::rt::type_info::uint64,
++                                                offsetof(Benchmark::WithUnit, length), false, false,
++                                                ::hilti::rt::type_info::struct_::Field::accessor_optional<
++                                                    ::hilti::rt::integer::safe<uint64_t>>()},
++         ::hilti::rt::type_info::struct_::Field{"inner",
++                                                &type_info::__ti_vector_Inner__vectorx2anamex2aBenchmark__Innerx2bx2b,
++                                                offsetof(Benchmark::WithUnit, inner), false, false,
++                                                ::hilti::rt::type_info::struct_::Field::accessor_optional<
++                                                    ::hilti::rt::Vector<__hlt_bench::Benchmark::Inner>>()},
++         ::hilti::rt::type_info::struct_::Field{"end_", &::hilti::rt::type_info::bytes,
++                                                offsetof(Benchmark::WithUnit, end_), false, false,
++                                                ::hilti::rt::type_info::struct_::Field::accessor_optional<
++                                                    ::hilti::rt::Bytes>()},
++     }))};
+ } // namespace
+ } // namespace __hlt_bench::type_info
+ 
+@@ -232,8 +220,7 @@ HILTI_PRE_INIT(__hlt_bench::Benchmark::__register_module)
+ 
+ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
+     ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const ::hilti::rt::stream::SafeConstIterator& __begin,
+-    ::hilti::rt::stream::View __cur, std::optional<::hilti::rt::RecoverableFailure> __error)
+-    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
++    ::hilti::rt::stream::View __cur) -> ::hilti::rt::stream::View {
+     {
+         // Begin parsing production: Variable: length -> uint<64>;
+         ::spicy::rt::detail::waitForInput(__data, __cur, ::hilti::rt::integer::safe<std::uint64_t>{8U},
+@@ -253,8 +240,8 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
+         // Begin parsing production: ForEach: inner -> foreach: Resolved_3;
+         ::hilti::rt::stream::View __limited_ = __cur.limit(::hilti::rt::optional::value((*this).length));
+         ::hilti::rt::stream::View __ncur = __cur.advance(::hilti::rt::optional::value((*this).length));
+-        std::tie(__limited_, __error) = (*this).__parse_inner_stage1(__data, __begin, __limited_, __error,
+-                                                                     ::hilti::rt::optional::valueOrInit((*this).inner));
++        __limited_ = (*this).__parse_inner_stage1(__data, __begin, __limited_,
++                                                  ::hilti::rt::optional::valueOrInit((*this).inner));
+         if ( __limited_.offset() < __ncur.offset() ) {
+             (*this).inner.reset();
+             throw ::spicy::rt::
+@@ -286,16 +273,15 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_Benchmark__WithUnit_stage2(
+         // End parsing production: Ctor: end_ -> b"BB" (const bytes);
+     }
+ 
+-    return std::make_tuple(__cur, __error);
++    return __cur;
+ }
+ 
+ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+                                                             const ::hilti::rt::stream::SafeConstIterator& __begin,
+                                                             ::hilti::rt::stream::View __cur,
+ 
+-                                                            std::optional<::hilti::rt::RecoverableFailure> __error,
+                                                             ::hilti::rt::Vector<__hlt_bench::Benchmark::Inner>& __dst)
+-    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
++    -> ::hilti::rt::stream::View {
+     ::hilti::rt::StrongReference<::spicy::rt::filter::detail::Filters> __lhs_2;
+     while (
+         ! (::spicy::rt::detail::atEod(__data, __cur,
+@@ -320,8 +306,6 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
+             (*__data).trim(__cur.begin());
+ 
+             // End parsing production: Variable: b   -> uint<8>;
+-
+-            std::tie(__cur, __error) = std::make_tuple(__cur, __error);
+         }
+         // End parsing production: Unit: Benchmark__Inner_2 -> b_2 (container 'inner');
+ 
+@@ -336,18 +320,15 @@ auto __hlt_bench::Benchmark::WithUnit::__parse_inner_stage1(::hilti::rt::ValueRe
+         }
+     }
+ 
+-    return std::make_tuple(__cur, __error);
++    return __cur;
+ }
+ 
+ auto __hlt_bench::Benchmark::WithUnit::__parse_stage1(::hilti::rt::ValueReference<::hilti::rt::Stream>& __data,
+                                                       const ::hilti::rt::stream::SafeConstIterator& __begin,
+-                                                      ::hilti::rt::stream::View __cur,
+-
+-                                                      std::optional<::hilti::rt::RecoverableFailure> __error)
+-    -> std::tuple<::hilti::rt::stream::View, std::optional<::hilti::rt::RecoverableFailure>> {
++                                                      ::hilti::rt::stream::View __cur) -> ::hilti::rt::stream::View {
+     {
+         ::hilti::rt::stream::SafeConstIterator __begin = __cur.begin();
+-        return (*this).__parse_Benchmark__WithUnit_stage2(__data, __begin, __cur, __error);
++        return (*this).__parse_Benchmark__WithUnit_stage2(__data, __begin, __cur);
+     }
+ 
+     // Won't get reached
+@@ -360,19 +341,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse1(::hilti::rt::ValueReference
+     ::hilti::rt::ValueReference<__hlt_bench::Benchmark::WithUnit> __unit =
+         ::hilti::rt::reference::make_value<__hlt_bench::Benchmark::WithUnit>((__hlt_bench::Benchmark::WithUnit()));
+     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
+-    std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
+ 
+     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+-    std::tie(__ncur, __error) = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, __error);
++    __ncur = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur);
+     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+ 
+-    if ( __error.has_value() ) {
+-        throw ::spicy::rt::ParseError(::hilti::rt::fmt("successful synchronization never confirmed: %s"sv,
+-                                                       ::hilti::rt::exception::what(
+-                                                           ::hilti::rt::optional::value(__error))),
+-                                      ::hilti::rt::exception::where(::hilti::rt::optional::value(__error)));
+-    }
+-
+     return __ncur;
+ }
+ 
+@@ -381,19 +354,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse2(
+     ::hilti::rt::ValueReference<::hilti::rt::Stream>& __data, const std::optional<::hilti::rt::stream::View>& __cur,
+     const std::optional<::spicy::rt::UnitContext>& __context) -> ::hilti::rt::stream::View {
+     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
+-    std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
+ 
+     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+-    std::tie(__ncur, __error) = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, __error);
++    __ncur = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur);
+     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+ 
+-    if ( __error.has_value() ) {
+-        throw ::spicy::rt::ParseError(::hilti::rt::fmt("successful synchronization never confirmed: %s"sv,
+-                                                       ::hilti::rt::exception::what(
+-                                                           ::hilti::rt::optional::value(__error))),
+-                                      ::hilti::rt::exception::where(::hilti::rt::optional::value(__error)));
+-    }
+-
+     return __ncur;
+ }
+ 
+@@ -407,19 +372,11 @@ extern auto __hlt_bench::Benchmark::WithUnit::parse3(::hilti::rt::ValueReference
+     ::spicy::rt::ParsedUnit::initialize((*__gunit), __unit,
+                                         &type_info::__ti_Benchmark__WithUnit_namex2aBenchmark__WithUnitx2b);
+     ::hilti::rt::stream::View __ncur = (__cur ? ::hilti::rt::optional::value(__cur) : (*__data).view());
+-    std::optional<::hilti::rt::RecoverableFailure> __error = std::optional<::hilti::rt::RecoverableFailure>();
+ 
+     // Begin parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+-    std::tie(__ncur, __error) = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur, __error);
++    __ncur = (*__unit).__parse_stage1(__data, __ncur.begin(), __ncur);
+     // End parsing production: Unit: Benchmark__WithUnit -> length inner end_;
+ 
+-    if ( __error.has_value() ) {
+-        throw ::spicy::rt::ParseError(::hilti::rt::fmt("successful synchronization never confirmed: %s"sv,
+-                                                       ::hilti::rt::exception::what(
+-                                                           ::hilti::rt::optional::value(__error))),
+-                                      ::hilti::rt::exception::where(::hilti::rt::optional::value(__error)));
+-    }
+-
+     return __ncur;
+ }
+ 
+-- 
+2.39.5 (Apple Git-154)
+

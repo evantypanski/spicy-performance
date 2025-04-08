@@ -54,17 +54,12 @@ int main(int argc, char** argv) {
     auto input = make_input();
     std::array<double, samples> sampled;
 
-    std::cout << "\r" << std::string(30, ' ') << "\r";
     for ( uint64_t i = 0; i < samples; i++ ) {
-        std::cout << "\rSampling " << i + 1 << "/" << samples << "..." << std::flush;
         sampled[i] = time_parser(input, hlt_bench::Benchmark::WithUnit::parse1);
     }
     hilti::rt::done();
 
-    std::cout << "\r" << std::flush;
-    std::cout << "                            \r" << std::flush;
-
-    std::cout << "Mean: " << std::accumulate(sampled.begin(), sampled.end(), 0.0) / samples << "\n";
+    std::cout << std::accumulate(sampled.begin(), sampled.end(), 0.0) / samples;
 
     return 0;
 }
